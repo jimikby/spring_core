@@ -17,4 +17,6 @@ public interface TicketDao extends AbstractDomainObjectDao<Ticket> {
 
 	void saveAll(Set<Ticket> tickets);
 
+	List<Ticket> takeTicketsByEventId(Long eventId);
+
 }

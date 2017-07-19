@@ -33,7 +33,10 @@ public class EventDaoImpl implements EventDao {
 
 		SQL_TAKE_BY_ID("select EVENT_ID,BASE_PRICE,EVENT_NAME,EVENT_RATING from EVENT where EVENT_ID = ?"), //
 
-		SQL_TAKE_BY_NAME("select EVENT_ID,BASE_PRICE,EVENT_NAME,EVENT_RATING from EVENT where EVENT_NAME = ?");
+		SQL_TAKE_BY_NAME("select EVENT_ID,BASE_PRICE,EVENT_NAME,EVENT_RATING from EVENT where EVENT_NAME = ?"),//
+		
+		SQL_UPDATE_BY_ID(
+				"update EVENT set  EVENT_NAME = ?,  BASE_PRICE = ?,  EVENT_RATING = ?,  WHERE EVENT_ID = ?"); //
 
 		final String query;
 
@@ -121,5 +124,19 @@ public class EventDaoImpl implements EventDao {
 			}
 		});
 	}
+
+	@Override
+	public void update(Long eventId, Event event) {
+			
+			jdbcTemplate.update(EventSqlQuery.SQL_UPDATE_BY_ID.query,
+					new Object[] { 
+							event.getEventName(),
+							event.getBasePrice(),
+							event.getRating(),
+							eventId,
+					});
+			
+
+		}
 
 }

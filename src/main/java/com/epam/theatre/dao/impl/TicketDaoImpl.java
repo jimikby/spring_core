@@ -50,7 +50,9 @@ public class TicketDaoImpl implements TicketDao {
 		SQL_TAKE_TICKET_BY_EVENT_SCHEDULE_ID(
 				"select TICKET_ID, CUSTOMER_ID, TICKET_COST, SEAT, EVENT_SCHEDULE_ID, DISCOUNT from TICKET where EVENT_SCHEDULE_ID = ?"), //
 
-		SQL_TAKE_TICKET_QUANTITY_BY_CUSTOMER_ID("select count(TICKET_ID) from TICKET where CUSTOMER_ID = ?"); //
+		SQL_TAKE_TICKET_QUANTITY_BY_CUSTOMER_ID("select count(TICKET_ID) from TICKET where CUSTOMER_ID = ?"),//
+		SQL_TAKE_TICKET_BY_EVENT_ID(
+				"select TICKET_ID, CUSTOMER_ID, TICKET_COST, SEAT, EVENT_SCHEDULE_ID, DISCOUNT from TICKET where EVENT_ID = ?"); //
 
 		final String query;
 
@@ -62,7 +64,7 @@ public class TicketDaoImpl implements TicketDao {
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
-	
+
 	@Override
 	public Long save(Ticket ticket) {
 
@@ -190,5 +192,18 @@ public class TicketDaoImpl implements TicketDao {
 				return tickets.size();
 			}
 		});
+	}
+
+	@Override
+	public List<Ticket> takeTicketsByEventId(Long eventId) {
+		try {
+			return jdbcTemplate.query(TicketSqlQuery.SQL_TAKE_TICKET_BY_EVENT_ID.query,
+					new Object[] { eventId }, new TicketRowMapper());
+
+		} catch (
+
+		EmptyResultDataAccessException e) {
+			return null;
+		}
 	}
 }

@@ -10,4 +10,6 @@ public interface EventService extends AbstractDomainObjectService<Event> {
 
 	void saveAll(List<Event> events);
 
+	void update(Long eventId, Event event);
+
 }

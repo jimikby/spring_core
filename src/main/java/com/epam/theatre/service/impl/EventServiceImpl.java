@@ -44,7 +44,13 @@ public class EventServiceImpl implements EventService {
 	@Override
 	public void saveAll(List<Event> events) {
 		eventDao.saveAll(events);
-		
+
+	}
+
+	@Override
+	public void update(Long eventId, Event event) {
+		eventDao.update(eventId, event);
+
 	}
 
 }

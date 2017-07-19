@@ -20,4 +20,6 @@ public interface TicketService extends AbstractDomainObjectService<Ticket> {
 
 	void saveAll(Set<Ticket> tickets);
 
+	List<Ticket> takeTicketsByEventId(Long eventId);
+
 }

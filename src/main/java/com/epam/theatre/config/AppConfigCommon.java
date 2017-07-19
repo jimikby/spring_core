@@ -18,9 +18,13 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.transaction.annotation.TransactionManagementConfigurer;
 
 import com.epam.theatre.domain.Auditorium;
 import com.epam.theatre.logic.DiscountStrategy;
@@ -29,9 +33,10 @@ import com.google.common.collect.Lists;
 @Configuration
 @ComponentScan(basePackages = "com.epam.theatre")
 @EnableAspectJAutoProxy
+@EnableTransactionManagement
 @PropertySource({ "classpath:auditoriums.properties", "classpath:discounts.properties" })
 
-public class AppConfigCommon {
+public class AppConfigCommon implements TransactionManagementConfigurer {
 
 	@Autowired
 	@Qualifier("everyTenStrategy")
@@ -54,10 +59,8 @@ public class AppConfigCommon {
 	public DataSource dataSource() {
 
 		EmbeddedDatabaseBuilder builder = new EmbeddedDatabaseBuilder();
-		EmbeddedDatabase dataSource = builder.setType(EmbeddedDatabaseType.DERBY)
-				.addScript("create_db.sql")
-				.addScript("fill_db.sql")
-				.build();
+		EmbeddedDatabase dataSource = builder.setType(EmbeddedDatabaseType.DERBY).addScript("create_db.sql")
+				.addScript("fill_db.sql").build();
 
 		return dataSource;
 	}
@@ -65,6 +68,16 @@ public class AppConfigCommon {
 	@Bean
 	public JdbcTemplate getjdbcTemplate() throws NamingException {
 		return new JdbcTemplate(dataSource);
+	}
+
+	@Bean
+	public PlatformTransactionManager txManager() {
+		return new DataSourceTransactionManager(dataSource());
+	}
+
+	@Override
+	public PlatformTransactionManager annotationDrivenTransactionManager() {
+		return txManager();
 	}
 
 	@Bean

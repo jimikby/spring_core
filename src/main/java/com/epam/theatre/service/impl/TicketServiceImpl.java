@@ -64,4 +64,9 @@ public class TicketServiceImpl implements TicketService {
 
 	}
 
+	@Override
+	public List<Ticket> takeTicketsByEventId(Long eventId) {
+		return ticketDao.takeTicketsByEventId(eventId);
+	}
+
 }

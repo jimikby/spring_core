@@ -11,14 +11,20 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import com.epam.theatre.domain.Auditorium;
 import com.epam.theatre.domain.Event;
 import com.epam.theatre.domain.EventSchedule;
 import com.epam.theatre.domain.Ticket;
 import com.epam.theatre.domain.Customer;
+import com.epam.theatre.domain.CustomerAccount;
 import com.epam.theatre.service.AuditoriumService;
 import com.epam.theatre.service.BookingService;
+import com.epam.theatre.service.CustomerAccountService;
 import com.epam.theatre.service.DiscountService;
 import com.epam.theatre.service.EventScheduleService;
 import com.epam.theatre.service.EventService;
@@ -55,10 +61,16 @@ public class BookingServiceImpl implements BookingService {
 	private AuditoriumService auditoriumService;
 
 	@Autowired
-	private CustomerService userService;
+	private CustomerService customerService;
 
 	@Autowired
 	private TicketService ticketService;
+
+	@Autowired
+	private CustomerAccountService customerAccountService;
+
+	@Autowired
+	private PlatformTransactionManager txManager;
 
 	@Override
 	public Set<Ticket> takeTicketsWithPrices(Long eventScheduleId, Set<Long> seats, Long userId) {
@@ -75,13 +87,13 @@ public class BookingServiceImpl implements BookingService {
 
 		if (userId != null) {
 
-			user = userService.getById(userId);
+			user = customerService.getById(userId);
 		} else {
 
 			user = new Customer() {
 				{
 					setRole((Set<String>) new HashSet<String>());
-					
+
 					setBirthDay(LocalDate.now().plusMonths(3));
 					setEmail(LocalDateTime.now() + "@" + LocalDateTime.now() + ".ru");
 					setFirstName("none");
@@ -90,8 +102,8 @@ public class BookingServiceImpl implements BookingService {
 
 				}
 			};
-	
-			userId = userService.save(user);	
+
+			userId = customerService.save(user);
 
 		}
 
@@ -144,20 +156,61 @@ public class BookingServiceImpl implements BookingService {
 	}
 
 	@Override
-	public Set<Long> bookTickets(Set<Ticket> tickets) {
+	public void bookTickets(Set<Ticket> tickets, Long customerId) {
 
-		Set<Long> ticketsId = new HashSet<>();
+		CustomerAccount customerAccount = customerAccountService.getById(customerId);
 
+		double money = customerAccount.getCustomerMoney();
+
+		double costTicket = calcTicketsCost(tickets);
+
+		double accountMoney = money - costTicket;
+
+		customerAccount.setCustomerMoney(accountMoney);
+
+		LOGGER.log(Level.INFO, "Customer account " + customerAccount + " have money");
+
+		DefaultTransactionDefinition def = new DefaultTransactionDefinition();
+
+		def.setName("SomeTxName");
+		
+		def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
+
+		TransactionStatus status = txManager.getTransaction(def);
 		ticketService.saveAll(tickets);
+		customerAccountService.updateById(customerAccount.getCustomerAccountId(), customerAccount);
 
-		return ticketsId;
+		if (accountMoney >= 0.0) {
+
+			txManager.commit(status);
+			LOGGER.log(Level.INFO, "COMMIT Customer account " + customerAccount + " have money");
+		} else {
+
+			txManager.rollback(status);
+			LOGGER.log(Level.INFO, "ROLLBACK Customer account " + customerAccount + " doesn't have money");
+
+		}
+
+	}
+
+	private Double calcTicketsCost(Set<Ticket> tickets) {
+
+		Double value = 0.0;
+
+		for (Ticket ticket : tickets) {
+
+			value = value + ticket.getTicketCost();
+
+		}
+
+		return value;
 	}
 
 	@Override
 	public Set<Long> checkSeats(Set<Long> seats, Long eventScheduleId) {
 
 		Set<Long> newSeats = new HashSet<>();
-		
+
 		System.out.println(eventScheduleId);
 
 		Auditorium auditorium = auditoriumService

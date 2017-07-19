@@ -10,4 +10,6 @@ public interface EventDao extends AbstractDomainObjectDao<Event> {
 
 	void saveAll(List<Event> events);
 
+	void update(Long eventId, Event event);
+
 }

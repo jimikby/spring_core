@@ -5,7 +5,7 @@ import com.epam.theatre.domain.Ticket;
 
 public interface BookingService {
 
-	Set<Long> bookTickets(Set<Ticket> tickets);
+	void bookTickets(Set<Ticket> tickets, Long customerId);
 
 	Set<Ticket> takeTicketsWithPrices(Long eventScheduleId, Set<Long> seats, Long userId);
 

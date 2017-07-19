@@ -16,12 +16,14 @@ import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.epam.theatre.dao.CustomerDao;
 import com.epam.theatre.dao.impl.rowmapper.CustomerRowMapper;
 import com.epam.theatre.domain.Customer;
 
 @Repository
+@Transactional
 public class CustomerDaoImpl implements CustomerDao {
 
 	private enum CustomerSqlQuery {
