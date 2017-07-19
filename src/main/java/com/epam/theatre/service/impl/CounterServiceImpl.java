@@ -13,44 +13,44 @@ import com.epam.theatre.service.CounterService;
 public class CounterServiceImpl implements CounterService {
 
 	@Autowired
-	private CounterDao сounterDao;
+	private CounterDao counterDao;
 
 	@Override
-	public Long save(Counter сounter) {
-		return сounterDao.save(сounter);
+	public Long save(Counter counter) {
+		return counterDao.save(counter);
 	}
 
 	@Override
-	public void remove(Long сounterId) {
-		сounterDao.remove(сounterId);
+	public void remove(Long counterId) {
+		counterDao.remove(counterId);
 
 	}
 
 	@Override
-	public Counter getById(Long сounterId) {
+	public Counter getById(Long counterId) {
 
-		return сounterDao.getById(сounterId);
+		return counterDao.getById(counterId);
 	}
 
 	@Override
 	public List<Counter> getAll() {
 
-		return сounterDao.getAll();
+		return counterDao.getAll();
 	}
 
 	@Override
 	public Counter takeByClassNameAndClassId(String className, String methodName, Long classId) {
-		return сounterDao.takeByClassNameAndClassId(className, methodName, classId);
+		return counterDao.takeByClassNameAndClassId(className, methodName, classId);
 	}
 
 	@Override
 	public void update(Long counterId, Long counterValue) {
-		сounterDao.update(counterId, counterValue);
+		counterDao.update(counterId, counterValue);
 	}
 
 	@Override
 	public Long takeAllCountersValueByClassName(String className) {
-		return сounterDao.takeAllCountersValueByClassName(className);
+		return counterDao.takeAllCountersValueByClassName(className);
 	}
 
 }

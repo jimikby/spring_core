@@ -1,0 +1,36 @@
+apply plugin: 'java'
+apply plugin: 'maven-publish'
+group = 'com.epam.theatre.core'
+version = property('theatre.version')
+repositories {
+	jcenter()
+	mavenLocal()
+}
+
+dependencies {
+	compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: property('log4j.version')
+	compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: property('log4j.version')
+	compile group: 'org.springframework', name: 'spring-context', version: property('spring.version')
+	compile group: 'org.springframework', name: 'spring-jdbc', version: property('spring.version')
+	compile group: 'org.aspectj', name: 'aspectjweaver', version: property('aspectjweaver.version')
+	compile group: 'org.aspectj', name: 'aspectjrt', version: property('aspectjrt.version')
+	compile group: 'com.google.guava', name: 'guava', version: property('guava.version')
+	compile group: 'org.springframework', name: 'spring-jdbc', version: property('spring.version')
+	compile group: 'org.springframework', name: 'spring-test', version: property('spring.version')
+	compile group: 'org.apache.tomcat', name: 'tomcat-jdbc', version: property('tomcat-jdbc.version')
+	compile group: 'org.apache.derby', name: 'derby', version: property('derby.version')
+}
+
+
+publishing {
+		publications {
+			modelPublish(MavenPublication) {
+			artifactId 'theatre.core'
+			from components.java 
+			}
+		}
+	}
+
+
+	
+

@@ -13,14 +13,14 @@ public class CounterRowMapper implements RowMapper<Counter> {
 	@Override
 	public Counter mapRow(ResultSet rs, int rowNum) throws SQLException {
 
-		Counter сounter = new Counter();
-		сounter.setCounterId(rs.getLong(SqlFields.COUNTER_ID.name()));
-		сounter.setTypeName(rs.getString(SqlFields.TYPE_NAME.name()));
-		сounter.setTypeId(rs.getLong(SqlFields.TYPE_ID.name()));
-		сounter.setCounterName(rs.getString(SqlFields.COUNTER_NAME.name()));
-		сounter.setCounterValue(rs.getLong(SqlFields.COUNTER_VALUE.name()));
+		Counter counter = new Counter();
+		counter.setCounterId(rs.getLong(SqlFields.COUNTER_ID.name()));
+		counter.setTypeName(rs.getString(SqlFields.TYPE_NAME.name()));
+		counter.setTypeId(rs.getLong(SqlFields.TYPE_ID.name()));
+		counter.setCounterName(rs.getString(SqlFields.COUNTER_NAME.name()));
+		counter.setCounterValue(rs.getLong(SqlFields.COUNTER_VALUE.name()));
 
-		return сounter;
+		return counter;
 	}
 
 }
