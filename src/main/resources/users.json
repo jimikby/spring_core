@@ -1,0 +1,18 @@
+[
+	{
+		"firstName":"Valera",
+		"lastName":"Memelko",
+		"role":"Memelko",
+		"birthDay":"1990-02-14",
+		"email":"valera@mail.ru",
+		"password":"fcc028355831a5714d0eb51e75a7ed8a"
+	},
+	{
+		"firstName":"Sergey",
+		"lastName":"Gerenko",
+		"role":"Memelko",
+		"birthDay":"1987-02-14",
+		"email":"serega@mail.ru",
+		"password":"fcc028355831a5714d0eb51e75a7ed8a"
+	}
+]

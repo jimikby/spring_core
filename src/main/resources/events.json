@@ -1,0 +1,14 @@
+[
+	{
+	"basePrice":"50.0",
+	"eventName":"Event4",
+	"rating":"MID"
+	}
+,
+
+	{
+	"basePrice":"40.0",
+	"eventName":"Event5",
+	"rating":"LOW"
+	}
+]	
